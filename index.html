@@ -229,7 +229,7 @@
     #courses{background:var(--dark2);}
     .courses-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;max-width:1200px;margin:0 auto;}
     .course-card{
-      background:var(--card);border:1px solid rgba(255,255,255,.05);border-radius:14px;padding:22px 20px;
+      background:var(--card);border:1px solid rgba(255,255,255,.05);border-radius:14px;padding:48px 20px 22px;
       display:flex;align-items:flex-start;gap:15px;
       transition:border-color .25s,transform .25s,box-shadow .25s;cursor:default;
       position:relative;overflow:hidden;
@@ -237,11 +237,13 @@
     .course-card::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent 60%,rgba(0,230,118,.03));opacity:0;transition:opacity .3s;}
     .course-card:hover{border-color:var(--green);transform:translateY(-5px);box-shadow:0 16px 48px rgba(0,230,118,.1);}
     .course-card:hover::after{opacity:1;}
+    .course-card > div:last-child{flex:1;min-width:0;}
     /* course card tag positioning */
     .course-card-tag{
-      position:absolute;top:12px;right:12px;
+      position:absolute;top:12px;left:12px;
       font-size:.62rem;font-weight:800;letter-spacing:.08em;
-      padding:3px 10px;border-radius:20px;
+      padding:4px 10px;border-radius:20px;white-space:nowrap;
+      z-index:2;
     }
     .tag-popular{background:rgba(0,230,118,.15);color:var(--green);border:1px solid rgba(0,230,118,.3);}
     .tag-demand{background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.3);}
@@ -510,6 +512,89 @@
       .nav-right{gap:8px;}
       .nav-wa{display:none;}
     }
+
+    /* ── COURSE DETAIL MODAL ── */
+    .course-card{cursor:pointer;}
+    .course-modal-overlay{
+      position:fixed;inset:0;background:rgba(4,8,18,.85);backdrop-filter:blur(8px);
+      z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;
+      opacity:0;transition:opacity .25s;overflow-y:auto;
+    }
+    .course-modal-overlay.active{display:flex;opacity:1;}
+    .course-modal{
+      background:linear-gradient(160deg,var(--dark2),var(--card));
+      border:1px solid rgba(0,230,118,.25);border-radius:18px;
+      max-width:780px;width:100%;max-height:92vh;overflow-y:auto;
+      box-shadow:0 30px 80px rgba(0,230,118,.18),0 0 0 1px rgba(0,230,118,.08) inset;
+      transform:translateY(20px) scale(.96);transition:transform .3s;
+      position:relative;
+    }
+    .course-modal-overlay.active .course-modal{transform:translateY(0) scale(1);}
+    .course-modal::-webkit-scrollbar{width:6px;}
+    .course-modal::-webkit-scrollbar-thumb{background:var(--green-dark);border-radius:4px;}
+    .cm-close{
+      position:absolute;top:14px;right:14px;background:rgba(229,57,53,.15);
+      border:1px solid rgba(229,57,53,.4);color:var(--red);
+      width:36px;height:36px;border-radius:50%;font-size:1.1rem;font-weight:700;
+      cursor:pointer;display:flex;align-items:center;justify-content:center;
+      transition:all .2s;z-index:2;
+    }
+    .cm-close:hover{background:var(--red);color:#fff;transform:rotate(90deg);}
+    .cm-header{
+      padding:34px 34px 24px;border-bottom:1px solid rgba(0,230,118,.12);
+      display:flex;align-items:center;gap:18px;
+    }
+    .cm-icon{
+      width:72px;height:72px;border-radius:16px;display:flex;align-items:center;
+      justify-content:center;font-size:2.2rem;flex-shrink:0;
+    }
+    .cm-htitle{font-family:'Rajdhani',sans-serif;font-size:1.7rem;font-weight:700;color:#fff;line-height:1.1;}
+    .cm-htag{display:inline-block;margin-top:6px;background:rgba(0,230,118,.12);color:var(--green);font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:.06em;}
+    .cm-body{padding:24px 34px 30px;}
+    .cm-meta{
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+      gap:12px;margin-bottom:24px;
+    }
+    .cm-meta-item{
+      background:rgba(0,230,118,.06);border:1px solid rgba(0,230,118,.15);
+      border-radius:10px;padding:12px 14px;
+    }
+    .cm-meta-label{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;}
+    .cm-meta-value{font-size:.95rem;color:#fff;font-weight:700;font-family:'Rajdhani',sans-serif;}
+    .cm-meta-value.fee{color:var(--green);font-size:1.1rem;}
+    .cm-section{margin-bottom:22px;}
+    .cm-section h4{
+      font-family:'Rajdhani',sans-serif;font-size:1.05rem;color:var(--green);
+      margin-bottom:10px;display:flex;align-items:center;gap:8px;letter-spacing:.04em;
+    }
+    .cm-section p{color:var(--text);font-size:.9rem;line-height:1.65;}
+    .cm-list{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px 18px;}
+    .cm-list li{
+      position:relative;padding-left:22px;color:var(--text);font-size:.86rem;line-height:1.55;
+    }
+    .cm-list li::before{
+      content:'▸';position:absolute;left:0;top:0;color:var(--green);font-weight:700;
+    }
+    .cm-cta-row{
+      display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;
+      padding-top:22px;border-top:1px solid rgba(0,230,118,.12);
+    }
+    .cm-cta-row button, .cm-cta-row a{
+      flex:1;min-width:180px;padding:14px 18px;border-radius:10px;
+      font-weight:700;font-size:.88rem;letter-spacing:.04em;cursor:pointer;
+      text-decoration:none;text-align:center;border:none;transition:all .2s;
+      display:flex;align-items:center;justify-content:center;gap:8px;
+    }
+    .cm-enroll{background:linear-gradient(135deg,var(--green),var(--green-dark));color:#04130a;}
+    .cm-enroll:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,230,118,.35);}
+    .cm-wa{background:rgba(0,230,118,.1);border:1px solid var(--green) !important;color:var(--green) !important;}
+    .cm-wa:hover{background:var(--green);color:#04130a !important;}
+    @media(max-width:600px){
+      .cm-header{padding:26px 20px 18px;flex-direction:column;text-align:center;gap:12px;}
+      .cm-body{padding:20px;}
+      .cm-list{grid-template-columns:1fr;}
+    }
+
   </style>
 </head>
 <body>
@@ -624,7 +709,7 @@
   <div class="sec-tag">// CURRICULUM</div>
   <h2 class="sec-title">Courses <span>Offered</span></h2>
   <div class="courses-grid">
-    <div class="course-card reveal">
+    <div class="course-card reveal" data-course="python" onclick="openCourse('python')">
       <span class="course-card-tag tag-popular">⭐ Most Popular</span>
       <div class="course-icon anim-bounce" style="background:rgba(59,130,246,.15);">🐍</div>
       <div>
@@ -633,7 +718,7 @@
         <div class="course-tag">MOST POPULAR</div>
       </div>
     </div>
-    <div class="course-card reveal">
+    <div class="course-card reveal" data-course="java" onclick="openCourse('java')">
       <span class="course-card-tag tag-demand">🔥 In Demand</span>
       <div class="course-icon anim-spin" style="background:rgba(239,68,68,.15);">☕</div>
       <div>
@@ -642,7 +727,7 @@
         <div class="course-tag">IN DEMAND</div>
       </div>
     </div>
-    <div class="course-card reveal">
+    <div class="course-card reveal" data-course="webdev" onclick="openCourse('webdev')">
       <span class="course-card-tag tag-career">💼 Career Ready</span>
       <div class="course-icon anim-wiggle" style="background:rgba(16,185,129,.15);">🌐</div>
       <div>
@@ -651,7 +736,7 @@
         <div class="course-tag">CAREER READY</div>
       </div>
     </div>
-    <div class="course-card reveal">
+    <div class="course-card reveal" data-course="htmlcssjs" onclick="openCourse('htmlcssjs')">
       <span class="course-card-tag tag-beginner">🌱 Beginner Friendly</span>
       <div class="course-icon anim-bob" style="background:rgba(245,158,11,.15);">📜</div>
       <div>
@@ -660,7 +745,7 @@
         <div class="course-tag">BEGINNER FRIENDLY</div>
       </div>
     </div>
-    <div class="course-card reveal">
+    <div class="course-card reveal" data-course="c" onclick="openCourse('c')">
       <span class="course-card-tag tag-foundation">🏛️ Foundation</span>
       <div class="course-icon anim-pulse" style="background:rgba(139,92,246,.15);">⚙️</div>
       <div>
@@ -669,7 +754,7 @@
         <div class="course-tag">FOUNDATION</div>
       </div>
     </div>
-    <div class="course-card reveal">
+    <div class="course-card reveal" data-course="cpp" onclick="openCourse('cpp')">
       <span class="course-card-tag tag-advanced">🚀 Advanced</span>
       <div class="course-icon anim-shake" style="background:rgba(20,184,166,.15);">🔧</div>
       <div>
@@ -678,7 +763,7 @@
         <div class="course-tag">ADVANCED</div>
       </div>
     </div>
-    <div class="course-card reveal">
+    <div class="course-card reveal" data-course="sql" onclick="openCourse('sql')">
       <span class="course-card-tag tag-essential">📌 Essential</span>
       <div class="course-icon anim-flip" style="background:rgba(251,191,36,.15);">🗄️</div>
       <div>
@@ -966,8 +1051,8 @@
     });
   });
 
-  // ── WHATSAPP NUMBER (apna number yahan daalo) ──
-  const WA_NUMBER = '919877618752'; // Format: country code + number, no + sign
+  // ── WHATSAPP NUMBER — AAPKA NUMBER (9877618752) ──
+  const WA_NUMBER = '919877618752'; // +91 9877618752
 
   // ── ENROLLMENT FORM → WHATSAPP ──
   function submitEnroll(){
@@ -983,19 +1068,27 @@
 
     // Build WhatsApp message
     const msg =
-      `🎓 *FREE DEMO Registration — CodeCraft Institute*\n\n` +
-      `👤 *Name:* ${name}\n` +
-      `📞 *Phone:* ${phone}\n` +
-      `📚 *Course Interest:* ${course}\n` +
-      `🎯 *Current Status:* ${status || 'Not specified'}\n` +
-      `💻 *Class Mode:* ${mode || 'Not specified'}\n\n` +
-      `_Please confirm my FREE demo slot. Thank you!_ 🙏`;
+      `🎓 *New Enrollment — CodeCraft Institute*` +
+      `\n\n👤 *Name:* ${name}` +
+      `\n📞 *Phone:* ${phone}` +
+      `\n📚 *Course:* ${course}` +
+      `\n🎯 *Status:* ${status || 'Not specified'}` +
+      `\n💻 *Mode:* ${mode || 'Not specified'}` +
+      `\n\n*Please contact me for demo class. Thank you!* 🙏`;
 
     const encodedMsg = encodeURIComponent(msg);
     const waURL = `https://wa.me/${WA_NUMBER}?text=${encodedMsg}`;
 
-    // Show success message
+    // Show success message with fallback link
     const s = document.getElementById('form-success');
+    s.innerHTML = `
+      <div style="font-size:1.1rem;margin-bottom:6px;">✅ Enrollment request ready!</div>
+      <div style="font-size:.85rem;opacity:.9;margin-bottom:10px;">WhatsApp pe message bhejne ke liye niche button dabayein.</div>
+      <a href="${waURL}" target="_blank" class="submit-btn" style="display:inline-block;text-decoration:none;margin-bottom:8px;">
+        <span class="wa-icon">💬</span> OPEN WHATSAPP & SEND MESSAGE
+      </a>
+      <div style="font-size:.78rem;opacity:.75;">Agar WhatsApp na khule toh seedha number pe message karein: <strong>9877618752</strong></div>
+    `;
     s.style.display = 'block';
 
     // Clear fields
@@ -1004,10 +1097,18 @@
       if(el) el.value = '';
     });
 
-    // Open WhatsApp
-    window.open(waURL, '_blank');
-
-    setTimeout(() => s.style.display = 'none', 8000);
+    // Open WhatsApp automatically (try both methods for compatibility)
+    try {
+      const a = document.createElement('a');
+      a.href = waURL;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => a.remove(), 100);
+    } catch(e) {
+      window.open(waURL, '_blank');
+    }
   }
 
   // ── CONTACT FORM → WHATSAPP ──
@@ -1021,23 +1122,213 @@
     if(!phone){ alert('Please enter your phone number.'); return; }
 
     const msg =
-      `📩 *Message — CodeCraft Institute Website*\n\n` +
-      `👤 *Name:* ${name}\n` +
-      `📞 *Phone:* ${phone}\n` +
-      `📧 *Email:* ${email || 'Not provided'}\n` +
-      `💬 *Message:* ${msg_ || 'No message'}\n\n` +
-      `_Kindly reply at your earliest. Thank you!_ 🙏`;
+      `📩 *Contact Message — CodeCraft Institute*` +
+      `\n\n👤 *Name:* ${name}` +
+      `\n📞 *Phone:* ${phone}` +
+      `\n📧 *Email:* ${email || 'Not provided'}` +
+      `\n💬 *Message:* ${msg_ || 'No message'}` +
+      `\n\n*Please reply soon. Thank you!* 🙏`;
 
     const encodedMsg = encodeURIComponent(msg);
     const waURL = `https://wa.me/${WA_NUMBER}?text=${encodedMsg}`;
 
     const s = document.getElementById('contact-success');
+    s.innerHTML = `
+      <div style="font-size:1.1rem;margin-bottom:6px;">✅ Message ready!</div>
+      <div style="font-size:.85rem;opacity:.9;margin-bottom:10px;">WhatsApp pe message bhejne ke liye niche button dabayein.</div>
+      <a href="${waURL}" target="_blank" class="submit-btn" style="display:inline-block;text-decoration:none;margin-bottom:8px;">
+        <span class="wa-icon">💬</span> OPEN WHATSAPP & SEND MESSAGE
+      </a>
+      <div style="font-size:.78rem;opacity:.75;">Agar WhatsApp na khule toh seedha number pe message karein: <strong>9877618752</strong></div>
+    `;
     s.style.display = 'block';
     ['c-name','c-phone','c-email','c-msg'].forEach(id => document.getElementById(id).value = '');
 
-    window.open(waURL, '_blank');
-    setTimeout(() => s.style.display = 'none', 6000);
+    // Open WhatsApp automatically (try both methods for compatibility)
+    try {
+      const a = document.createElement('a');
+      a.href = waURL;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => a.remove(), 100);
+    } catch(e) {
+      window.open(waURL, '_blank');
+    }
   }
+  // ── SCROLL TO SECTION ──
+  function goTo(id) {
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // ── REVEAL ON SCROLL ──
+  const revealElements = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+  revealElements.forEach(el => observer.observe(el));
+
 </script>
+
+<!-- COURSE DETAIL MODAL -->
+<div class="course-modal-overlay" id="courseModal" onclick="if(event.target===this)closeCourse()">
+  <div class="course-modal">
+    <button class="cm-close" onclick="closeCourse()">✕</button>
+    <div class="cm-header">
+      <div class="cm-icon" id="cmIcon">🐍</div>
+      <div>
+        <div class="cm-htitle" id="cmTitle">Course</div>
+        <span class="cm-htag" id="cmTag">TAG</span>
+      </div>
+    </div>
+    <div class="cm-body">
+      <div class="cm-meta">
+        <div class="cm-meta-item"><div class="cm-meta-label">⏱ Duration</div><div class="cm-meta-value" id="cmDuration">—</div></div>
+        <div class="cm-meta-item"><div class="cm-meta-label">📊 Level</div><div class="cm-meta-value" id="cmLevel">—</div></div>
+        <div class="cm-meta-item"><div class="cm-meta-label">💰 Fees</div><div class="cm-meta-value fee" id="cmFees">—</div></div>
+        <div class="cm-meta-item"><div class="cm-meta-label">🎓 Mode</div><div class="cm-meta-value" id="cmMode">Online / Offline</div></div>
+      </div>
+      <div class="cm-section">
+        <h4>📖 About this Course</h4>
+        <p id="cmAbout">—</p>
+      </div>
+      <div class="cm-section">
+        <h4>📚 What You'll Learn</h4>
+        <ul class="cm-list" id="cmTopics"></ul>
+      </div>
+      <div class="cm-section">
+        <h4>🎁 What's Included</h4>
+        <ul class="cm-list" id="cmIncludes"></ul>
+      </div>
+      <div class="cm-section">
+        <h4>✅ Eligibility</h4>
+        <p id="cmEligibility">Open to all — no prior experience required.</p>
+      </div>
+      <div class="cm-cta-row">
+        <button class="cm-enroll" onclick="enrollCourse()">🚀 Enroll Now</button>
+        <a class="cm-wa" id="cmWa" href="#" target="_blank">💬 Ask on WhatsApp</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const COURSE_DATA = {
+  python: {
+    icon:"🐍", bg:"rgba(59,130,246,.15)", title:"Python Programming", tag:"⭐ MOST POPULAR",
+    duration:"3 Months", level:"Beginner → Advanced", fees:"₹4,999",
+    about:"Python is the world's most beginner-friendly language and the #1 choice for automation, data science, AI/ML and web backends. This course takes you from zero to confidently writing your own scripts and real projects.",
+    topics:["Python Basics & Syntax","Variables, Data Types & Operators","Conditional Statements & Loops","Functions & Modules","Lists, Tuples, Sets, Dictionaries","String Handling","File Handling (read/write)","Exception Handling","Object Oriented Programming","Working with Libraries (NumPy, Pandas basics)","Automation Scripts","Mini Projects & Capstone"],
+    includes:["Daily class notes (PDF)","Practice assignments","2 Real-world projects","Certificate on completion","Doubt-solving support","Lifetime WhatsApp group access"],
+    eligibility:"Anyone — students, working professionals, or absolute beginners. Just a laptop and curiosity needed."
+  },
+  java: {
+    icon:"☕", bg:"rgba(239,68,68,.15)", title:"Java Programming", tag:"🔥 IN DEMAND",
+    duration:"3.5 Months", level:"Beginner → Advanced", fees:"₹5,499",
+    about:"Java powers Android apps, enterprise software, and banking systems worldwide. Learn the full OOP paradigm and build solid, scalable applications recruiters love.",
+    topics:["Java Basics & JVM Architecture","Data Types & Operators","Control Statements","Arrays & Strings","Object Oriented Programming (OOP)","Inheritance, Polymorphism, Abstraction","Exception Handling","Collections Framework","Multithreading","File I/O","JDBC (Database Connectivity)","Mini Projects"],
+    includes:["Complete OOP notes","Coding assignments after each topic","Interview question bank","2 Industry-grade projects","Certificate on completion","Resume guidance"],
+    eligibility:"Students of class 11+ / college / professionals. No prior programming knowledge required."
+  },
+  webdev: {
+    icon:"🌐", bg:"rgba(16,185,129,.15)", title:"Web Development", tag:"💼 CAREER READY",
+    duration:"4 Months", level:"Beginner → Pro", fees:"₹6,999",
+    about:"Become a full frontend web developer. Build beautiful, responsive websites from scratch and deploy them live on the internet for the world to see.",
+    topics:["HTML5 Structure & Semantics","CSS3 Styling & Flexbox/Grid","Responsive Design","JavaScript Fundamentals","DOM Manipulation","ES6+ Features","Forms & Validation","API & Fetch","Tailwind CSS Basics","Intro to React","Git & GitHub","Hosting & Deployment"],
+    includes:["5+ Real website projects","Personal portfolio site","Daily notes & cheat sheets","Domain & hosting guidance","Certificate","Portfolio review"],
+    eligibility:"Perfect for beginners, designers, freelancers and anyone wanting an online career."
+  },
+  htmlcssjs: {
+    icon:"📜", bg:"rgba(245,158,11,.15)", title:"HTML, CSS & JavaScript", tag:"🌱 BEGINNER FRIENDLY",
+    duration:"2 Months", level:"Absolute Beginner", fees:"₹3,499",
+    about:"The perfect first step into the world of web. Learn the three core technologies every website on the internet is built on.",
+    topics:["HTML Tags & Structure","Semantic HTML","CSS Selectors & Properties","Box Model","Flexbox & Grid","Responsive Layouts","JavaScript Basics","Variables, Functions, Loops","Events & DOM","Form Handling","Mini Projects","Build & Publish a Website"],
+    includes:["Step-by-step notes","Practice files","3 Mini projects","Certificate","Doubt support"],
+    eligibility:"Anyone above 13 years. Zero coding background welcome."
+  },
+  c: {
+    icon:"⚙️", bg:"rgba(139,92,246,.15)", title:"C Programming", tag:"🏛️ FOUNDATION",
+    duration:"2.5 Months", level:"Beginner", fees:"₹3,999",
+    about:"C is the mother of all modern programming languages. Master it to truly understand how computers, memory and software actually work.",
+    topics:["Intro to C & Compiler","Data Types & Operators","Input/Output Functions","Control Flow","Functions","Arrays & Strings","Pointers (in depth)","Structures & Unions","Dynamic Memory Allocation","File Handling","Preprocessor Directives","Mini Projects"],
+    includes:["Complete C notes","Daily practice problems","Coding sheet (100+ Qs)","Certificate","College syllabus coverage"],
+    eligibility:"BCA / B.Tech / Diploma students or beginners who want a strong foundation."
+  },
+  cpp: {
+    icon:"🔧", bg:"rgba(20,184,166,.15)", title:"C++ Programming", tag:"🚀 ADVANCED",
+    duration:"3 Months", level:"Intermediate → Advanced", fees:"₹4,499",
+    about:"C++ powers game engines, browsers and high-performance systems. Learn OOP, STL and the skills needed for competitive programming and placements.",
+    topics:["C++ Basics & Differences from C","OOP Concepts in C++","Classes, Objects, Constructors","Inheritance & Polymorphism","Operator Overloading","Templates","Exception Handling","STL (Vectors, Maps, Sets)","Pointers & References","File Handling","Competitive Programming Basics","DSA Intro"],
+    includes:["Detailed C++ notes","DSA practice questions","Placement-ready problem set","Certificate","Coding contest guidance"],
+    eligibility:"Students who know basic C or any programming. Great for placement prep."
+  },
+  sql: {
+    icon:"🗄️", bg:"rgba(251,191,36,.15)", title:"SQL Database", tag:"📌 ESSENTIAL",
+    duration:"1.5 Months", level:"Beginner → Intermediate", fees:"₹2,999",
+    about:"Every app needs data. SQL is the universal language to design, query and manage databases — an essential skill for every developer, analyst and tester.",
+    topics:["Intro to Databases & RDBMS","Installing MySQL","DDL, DML, DCL, TCL","SELECT, WHERE, ORDER BY","Joins (Inner, Left, Right, Full)","Group By & Aggregates","Subqueries","Views & Indexes","Stored Procedures","Triggers","Normalization","Mini Database Project"],
+    includes:["SQL practice sheet","Real database project","Interview Q&A bank","Certificate","Doubt support"],
+    eligibility:"Anyone — developers, testers, analysts, BCA / B.Tech / MCA students."
+  }
+};
+
+function openCourse(key){
+  const c = COURSE_DATA[key]; if(!c) return;
+  document.getElementById('cmIcon').textContent = c.icon;
+  document.getElementById('cmIcon').style.background = c.bg;
+  document.getElementById('cmTitle').textContent = c.title;
+  document.getElementById('cmTag').textContent = c.tag;
+  document.getElementById('cmDuration').textContent = c.duration;
+  document.getElementById('cmLevel').textContent = c.level;
+  document.getElementById('cmFees').textContent = c.fees;
+  document.getElementById('cmAbout').textContent = c.about;
+  document.getElementById('cmEligibility').textContent = c.eligibility;
+  document.getElementById('cmTopics').innerHTML = c.topics.map(t=>`<li>${t}</li>`).join('');
+  document.getElementById('cmIncludes').innerHTML = c.includes.map(t=>`<li>${t}</li>`).join('');
+  document.getElementById('cmWa').href = `https://wa.me/919877618752?text=${encodeURIComponent('Hi! I want to know more about the '+c.title+' course.')}`;
+  document.getElementById('courseModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+  window._currentCourse = c.title;
+}
+function closeCourse(){
+  document.getElementById('courseModal').classList.remove('active');
+  document.body.style.overflow = '';
+}
+function enrollCourse(){
+  closeCourse();
+  setTimeout(()=>{
+    const el = document.getElementById('enroll');
+    if(el) el.scrollIntoView({behavior:'smooth'});
+    // Pre-fill course field using mapping
+    setTimeout(()=>{
+      const sel = document.getElementById('e-course');
+      if(sel && window._currentCourse){
+        const map = {
+          'Python Programming': 'Python Programming',
+          'Java Programming': 'Java Programming',
+          'Web Development': 'Web Development (HTML/CSS/JS)',
+          'HTML, CSS & JavaScript': 'Web Development (HTML/CSS/JS)',
+          'C Programming': 'C Programming',
+          'C++ Programming': 'C++ Programming',
+          'SQL Database': 'SQL Database'
+        };
+        const optionText = map[window._currentCourse];
+        if(optionText){
+          for(const o of sel.options){
+            if(o.text === optionText){ sel.value = o.value; break; }
+          }
+        }
+      }
+    }, 600);
+  }, 200);
+}
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeCourse(); });
+</script>
+
 </body>
 </html>
