@@ -595,6 +595,91 @@
       .cm-list{grid-template-columns:1fr;}
     }
 
+
+    /* ── PAY BUTTON ON COURSE CARD ── */
+    .course-pay-btn{
+      margin-top:14px;width:100%;display:flex;align-items:center;justify-content:center;gap:8px;
+      background:linear-gradient(135deg,var(--green),var(--green-dark));color:#04130a;
+      border:none;border-radius:10px;padding:11px 14px;font-family:'Exo 2',sans-serif;
+      font-weight:800;font-size:.82rem;letter-spacing:.06em;cursor:pointer;
+      transition:transform .15s,box-shadow .2s;box-shadow:0 6px 18px rgba(0,230,118,.18);
+    }
+    .course-pay-btn:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(0,230,118,.35);}
+    .course-pay-btn .amt{background:rgba(0,0,0,.18);padding:2px 8px;border-radius:6px;font-weight:900;}
+    .course-pay-demo{
+      margin-top:8px;width:100%;display:flex;align-items:center;justify-content:center;gap:6px;
+      background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.35);color:var(--green);
+      border-radius:10px;padding:9px 12px;font-family:'Exo 2',sans-serif;font-weight:700;
+      font-size:.74rem;letter-spacing:.06em;cursor:pointer;transition:all .2s;
+    }
+    .course-pay-demo:hover{background:var(--green);color:#04130a;}
+
+    /* ── PAYMENT MODAL ── */
+    .pay-overlay{
+      position:fixed;inset:0;background:rgba(4,8,16,.85);backdrop-filter:blur(8px);
+      display:none;align-items:center;justify-content:center;z-index:500;padding:20px;
+      opacity:0;transition:opacity .25s;
+    }
+    .pay-overlay.active{display:flex;opacity:1;}
+    .pay-box{
+      background:linear-gradient(160deg,var(--dark2),var(--card));
+      border:1px solid rgba(0,230,118,.25);border-radius:18px;
+      width:100%;max-width:430px;padding:28px 26px 24px;position:relative;
+      box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 60px rgba(0,230,118,.08);
+      transform:translateY(20px) scale(.96);transition:transform .3s;
+    }
+    .pay-overlay.active .pay-box{transform:translateY(0) scale(1);}
+    .pay-close{
+      position:absolute;top:12px;right:12px;width:34px;height:34px;border-radius:50%;
+      background:rgba(255,255,255,.06);border:none;color:#fff;font-size:1rem;cursor:pointer;
+      display:flex;align-items:center;justify-content:center;transition:all .2s;
+    }
+    .pay-close:hover{background:var(--red);transform:rotate(90deg);}
+    .pay-head{text-align:center;margin-bottom:18px;}
+    .pay-head h3{font-family:'Rajdhani',sans-serif;font-size:1.5rem;color:#fff;font-weight:700;}
+    .pay-head .sub{color:var(--muted);font-size:.82rem;margin-top:4px;}
+    .pay-amount{
+      text-align:center;margin:6px 0 18px;font-family:'Rajdhani',sans-serif;
+      font-size:2.4rem;font-weight:700;color:var(--green);letter-spacing:.02em;
+    }
+    .pay-qr-wrap{
+      background:#fff;border-radius:14px;padding:14px;margin:0 auto 16px;
+      width:fit-content;box-shadow:0 8px 24px rgba(0,230,118,.18);
+    }
+    .pay-qr-wrap img{display:block;width:240px;height:240px;}
+    .pay-upi{
+      background:rgba(0,230,118,.08);border:1px dashed rgba(0,230,118,.4);
+      border-radius:10px;padding:10px 14px;text-align:center;margin-bottom:14px;
+      font-family:'Source Code Pro',monospace;font-size:.85rem;color:var(--green);
+      word-break:break-all;cursor:pointer;transition:all .2s;
+    }
+    .pay-upi:hover{background:rgba(0,230,118,.14);}
+    .pay-upi small{display:block;color:var(--muted);font-family:'Exo 2',sans-serif;font-size:.65rem;letter-spacing:.1em;margin-bottom:3px;}
+    .pay-apps{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+    .pay-apps a{
+      display:flex;align-items:center;justify-content:center;gap:8px;
+      padding:12px;border-radius:10px;text-decoration:none;font-weight:700;
+      font-size:.82rem;transition:all .2s;
+    }
+    .pay-apps .pay-phonepe{background:linear-gradient(135deg,#5f259f,#3b1670);color:#fff;}
+    .pay-apps .pay-any{background:linear-gradient(135deg,var(--green),var(--green-dark));color:#04130a;}
+    .pay-apps a:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(0,0,0,.35);}
+    .pay-steps{
+      background:rgba(255,255,255,.03);border-radius:10px;padding:12px 14px;
+      font-size:.78rem;color:var(--text);line-height:1.6;margin-bottom:14px;
+    }
+    .pay-steps b{color:var(--green);}
+    .pay-confirm{
+      width:100%;padding:13px;border-radius:10px;border:none;cursor:pointer;
+      background:rgba(0,230,118,.12);color:var(--green);font-weight:800;
+      font-size:.85rem;letter-spacing:.06em;border:1px solid var(--green);transition:all .2s;
+    }
+    .pay-confirm:hover{background:var(--green);color:#04130a;}
+    @media(max-width:480px){
+      .pay-qr-wrap img{width:200px;height:200px;}
+      .pay-apps{grid-template-columns:1fr;}
+    }
+
   </style>
 </head>
 <body>
@@ -716,6 +801,8 @@
         <div class="course-name">Python Programming</div>
         <div class="course-desc">From basics to automation, scripting and data handling. The most beginner-friendly language.</div>
         <div class="course-tag">MOST POPULAR</div>
+        <button class="course-pay-btn" onclick="event.stopPropagation();openPay(4999,'Python Programming')">💳 Enroll Now <span class="amt">₹4999</span></button>
+        <button class="course-pay-demo" onclick="event.stopPropagation();openPay(199,'Python Programming — Demo Class')">🎓 Book Demo Class — ₹199</button>
       </div>
     </div>
     <div class="course-card reveal" data-course="java" onclick="openCourse('java')">
@@ -725,6 +812,8 @@
         <div class="course-name">Java Programming</div>
         <div class="course-desc">OOP concepts, JVM, and building robust enterprise-ready applications.</div>
         <div class="course-tag">IN DEMAND</div>
+        <button class="course-pay-btn" onclick="event.stopPropagation();openPay(5499,'Java Programming')">💳 Enroll Now <span class="amt">₹5499</span></button>
+        <button class="course-pay-demo" onclick="event.stopPropagation();openPay(199,'Java Programming — Demo Class')">🎓 Book Demo Class — ₹199</button>
       </div>
     </div>
     <div class="course-card reveal" data-course="webdev" onclick="openCourse('webdev')">
@@ -734,6 +823,8 @@
         <div class="course-name">Web Development</div>
         <div class="course-desc">Full frontend workflow: layouts, responsive design, interactivity and deployment.</div>
         <div class="course-tag">CAREER READY</div>
+        <button class="course-pay-btn" onclick="event.stopPropagation();openPay(6999,'Web Development')">💳 Enroll Now <span class="amt">₹6999</span></button>
+        <button class="course-pay-demo" onclick="event.stopPropagation();openPay(199,'Web Development — Demo Class')">🎓 Book Demo Class — ₹199</button>
       </div>
     </div>
     <div class="course-card reveal" data-course="htmlcssjs" onclick="openCourse('htmlcssjs')">
@@ -743,6 +834,8 @@
         <div class="course-name">HTML, CSS &amp; JavaScript</div>
         <div class="course-desc">The core trio of the web. Build real websites from the ground up confidently.</div>
         <div class="course-tag">BEGINNER FRIENDLY</div>
+        <button class="course-pay-btn" onclick="event.stopPropagation();openPay(3499,'HTML, CSS & JavaScript')">💳 Enroll Now <span class="amt">₹3499</span></button>
+        <button class="course-pay-demo" onclick="event.stopPropagation();openPay(199,'HTML, CSS & JavaScript — Demo Class')">🎓 Book Demo Class — ₹199</button>
       </div>
     </div>
     <div class="course-card reveal" data-course="c" onclick="openCourse('c')">
@@ -752,6 +845,8 @@
         <div class="course-name">C Programming</div>
         <div class="course-desc">Master the foundation: memory management, pointers, and system-level code.</div>
         <div class="course-tag">FOUNDATION</div>
+        <button class="course-pay-btn" onclick="event.stopPropagation();openPay(3999,'C Programming')">💳 Enroll Now <span class="amt">₹3999</span></button>
+        <button class="course-pay-demo" onclick="event.stopPropagation();openPay(199,'C Programming — Demo Class')">🎓 Book Demo Class — ₹199</button>
       </div>
     </div>
     <div class="course-card reveal" data-course="cpp" onclick="openCourse('cpp')">
@@ -761,6 +856,8 @@
         <div class="course-name">C++ Programming</div>
         <div class="course-desc">Object-oriented C++, STL, competitive programming basics and beyond.</div>
         <div class="course-tag">ADVANCED</div>
+        <button class="course-pay-btn" onclick="event.stopPropagation();openPay(4499,'C++ Programming')">💳 Enroll Now <span class="amt">₹4499</span></button>
+        <button class="course-pay-demo" onclick="event.stopPropagation();openPay(199,'C++ Programming — Demo Class')">🎓 Book Demo Class — ₹199</button>
       </div>
     </div>
     <div class="course-card reveal" data-course="sql" onclick="openCourse('sql')">
@@ -770,6 +867,8 @@
         <div class="course-name">SQL Database</div>
         <div class="course-desc">Design and query databases — an essential skill for every software developer.</div>
         <div class="course-tag">ESSENTIAL</div>
+        <button class="course-pay-btn" onclick="event.stopPropagation();openPay(2999,'SQL Database')">💳 Enroll Now <span class="amt">₹2999</span></button>
+        <button class="course-pay-demo" onclick="event.stopPropagation();openPay(199,'SQL Database — Demo Class')">🎓 Book Demo Class — ₹199</button>
       </div>
     </div>
   </div>
@@ -1210,7 +1309,8 @@
         <p id="cmEligibility">Open to all — no prior experience required.</p>
       </div>
       <div class="cm-cta-row">
-        <button class="cm-enroll" onclick="enrollCourse()">🚀 Enroll Now</button>
+        <button class="cm-enroll" onclick="payFromModal()">💳 Pay & Enroll</button>
+        <button class="cm-enroll" style="background:linear-gradient(135deg,#1e88e5,#1565c0);color:#fff" onclick="payDemoFromModal()">🎓 Pay ₹199 Demo</button>
         <a class="cm-wa" id="cmWa" href="#" target="_blank">💬 Ask on WhatsApp</a>
       </div>
     </div>
@@ -1329,6 +1429,94 @@ function enrollCourse(){
 }
 document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeCourse(); });
 </script>
+
+
+<!-- PAYMENT MODAL (UPI / PhonePe) -->
+<div class="pay-overlay" id="payModal" onclick="if(event.target===this)closePay()">
+  <div class="pay-box">
+    <button class="pay-close" onclick="closePay()">✕</button>
+    <div class="pay-head">
+      <h3>💳 Complete Payment</h3>
+      <div class="sub" id="payLabel">Course Payment</div>
+    </div>
+    <div class="pay-amount" id="payAmount">₹0</div>
+    <div class="pay-qr-wrap" onclick="confirmPaid()" style="cursor:pointer" title="Click after payment">
+      <img id="payQR" alt="Scan to Pay UPI QR"/>
+    </div>
+    <div class="pay-upi" id="payUpi" onclick="copyUpi()" title="Click to copy UPI ID">
+      <small>UPI ID — TAP TO COPY</small>
+      aanchal201v@okhdfcbank
+    </div>
+    <div class="pay-success" id="paySuccess" style="display:none;text-align:center;padding:18px 12px;margin-top:6px;background:rgba(0,200,120,.12);border:1px solid var(--green);border-radius:12px;color:var(--green);font-weight:700;font-size:1.05rem;">
+      ✅ Course Enrolled Successfully
+    </div>
+  </div>
+</div>
+
+<script>
+const UPI_ID = "aanchal201v@okhdfcbank";
+const PAYEE  = "CodeCraft Institute";
+const WA_NUM = "919877618752";
+let _payCtx = { amount:0, label:'' };
+
+function _buildUpiLink(amount, note){
+  const params = new URLSearchParams({
+    pa: UPI_ID, pn: PAYEE,
+    am: String(amount), cu: 'INR',
+    tn: note
+  });
+  return 'upi://pay?' + params.toString();
+}
+function _phonePeLink(amount, note){
+  const params = new URLSearchParams({
+    pa: UPI_ID, pn: PAYEE, am: String(amount), cu: 'INR', tn: note
+  });
+  return 'phonepe://pay?' + params.toString();
+}
+
+function openPay(amount, label){
+  _payCtx = { amount, label };
+  document.getElementById('payAmount').textContent = '₹' + amount;
+  document.getElementById('payLabel').textContent = label;
+  const note = (label + ' - CodeCraft').replace(/[^\w\s-]/g,'').slice(0,40);
+  const link = _buildUpiLink(amount, note);
+  document.getElementById('payQR').src =
+    'https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=0&data=' + encodeURIComponent(link);
+  document.getElementById('paySuccess').style.display = 'none';
+  document.getElementById('payModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closePay(){
+  document.getElementById('payModal').classList.remove('active');
+  document.body.style.overflow = '';
+}
+function copyUpi(){
+  navigator.clipboard.writeText(UPI_ID).then(()=>{
+    const el = document.getElementById('payUpi');
+    const orig = el.innerHTML;
+    el.innerHTML = '<small>COPIED ✓</small>' + UPI_ID;
+    setTimeout(()=>{ el.innerHTML = orig; }, 1500);
+  });
+}
+function confirmPaid(){
+  document.getElementById('paySuccess').style.display = 'block';
+  setTimeout(closePay, 2500);
+}
+function payFromModal(){
+  const title = (window._currentCourse || 'Course');
+  const feeText = document.getElementById('cmFees').textContent || '';
+  const amt = parseInt(feeText.replace(/[^0-9]/g,''),10) || 4999;
+  closeCourse();
+  setTimeout(()=>openPay(amt, title), 250);
+}
+function payDemoFromModal(){
+  const title = (window._currentCourse || 'Course') + ' — Demo Class';
+  closeCourse();
+  setTimeout(()=>openPay(199, title), 250);
+}
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closePay(); });
+</script>
+
 
 </body>
 </html>
