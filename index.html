@@ -642,28 +642,6 @@
       text-align:center;margin:6px 0 18px;font-family:'Rajdhani',sans-serif;
       font-size:2.4rem;font-weight:700;color:var(--green);letter-spacing:.02em;
     }
-    .pay-qr-wrap{
-      background:#fff;border-radius:14px;padding:14px;margin:0 auto 16px;
-      width:fit-content;box-shadow:0 8px 24px rgba(0,230,118,.18);
-    }
-    .pay-qr-wrap img{display:block;width:240px;height:240px;}
-    .pay-upi{
-      background:rgba(0,230,118,.08);border:1px dashed rgba(0,230,118,.4);
-      border-radius:10px;padding:10px 14px;text-align:center;margin-bottom:14px;
-      font-family:'Source Code Pro',monospace;font-size:.85rem;color:var(--green);
-      word-break:break-all;cursor:pointer;transition:all .2s;
-    }
-    .pay-upi:hover{background:rgba(0,230,118,.14);}
-    .pay-upi small{display:block;color:var(--muted);font-family:'Exo 2',sans-serif;font-size:.65rem;letter-spacing:.1em;margin-bottom:3px;}
-    .pay-apps{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
-    .pay-apps a{
-      display:flex;align-items:center;justify-content:center;gap:8px;
-      padding:12px;border-radius:10px;text-decoration:none;font-weight:700;
-      font-size:.82rem;transition:all .2s;
-    }
-    .pay-apps .pay-phonepe{background:linear-gradient(135deg,#5f259f,#3b1670);color:#fff;}
-    .pay-apps .pay-any{background:linear-gradient(135deg,var(--green),var(--green-dark));color:#04130a;}
-    .pay-apps a:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(0,0,0,.35);}
     .pay-steps{
       background:rgba(255,255,255,.03);border-radius:10px;padding:12px 14px;
       font-size:.78rem;color:var(--text);line-height:1.6;margin-bottom:14px;
@@ -675,11 +653,6 @@
       font-size:.85rem;letter-spacing:.06em;border:1px solid var(--green);transition:all .2s;
     }
     .pay-confirm:hover{background:var(--green);color:#04130a;}
-    @media(max-width:480px){
-      .pay-qr-wrap img{width:200px;height:200px;}
-      .pay-apps{grid-template-columns:1fr;}
-    }
-
   </style>
 </head>
 <body>
@@ -780,6 +753,7 @@
       </div>
     </div>
     <div class="demo-right reveal-right">
+      <button class="demo-cta-btn" onclick="openRazorpay(199,'Demo Class Fee')" style="background:linear-gradient(135deg,#1565c0,#1e88e5);color:#fff;margin-bottom:10px;">💳 Pay Demo Fee ₹199 — Razorpay</button>
       <button class="demo-cta-btn" onclick="goTo('enroll')">
         📥 BOOK YOUR FREE DEMO<br>
         <small style="font-size:.75rem;font-weight:600;opacity:.8">Fill the form below ↓</small>
@@ -1015,15 +989,22 @@
         </div>
       </div>
       <div id="form-success">
-        ✅ Form submitted! WhatsApp khul raha hai... aapka message direct bhejna confirm karo! 🚀<br>
-        <span style="font-size:.8rem;font-weight:500;opacity:.8">Agar WhatsApp nahi khula to seedha message karein: 9877618752</span>
+        ✅ Form complete!
+      </div>
+      <div style="background:linear-gradient(135deg,rgba(21,101,192,.18),rgba(0,230,118,.12));border:1.5px solid var(--green);border-radius:12px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+        <div>
+          <div style="font-size:.72rem;letter-spacing:.12em;color:var(--muted);font-weight:700;">DEMO CLASS FEE</div>
+          <div style="font-size:1.4rem;font-weight:900;color:#fff;font-family:'Rajdhani',sans-serif;">₹199 <span style="font-size:.7rem;color:var(--muted);font-weight:600;letter-spacing:.08em;">· Auto-filled</span></div>
+        </div>
+        <div style="font-size:.78rem;color:var(--muted);max-width:240px;text-align:right;">
+          Pay ₹199 on Razorpay to confirm your demo seat.
+        </div>
       </div>
       <button class="submit-btn" onclick="submitEnroll()">
-        <span class="wa-icon">💬</span>
-        REGISTER & WHATSAPP KARO NOW
+        ✅ SUBMIT &amp; PAY ₹199 VIA RAZORPAY
       </button>
       <div class="wa-note">
-        📲 Form submit hote hi aapka WhatsApp pe message jayega directly
+        🔒 Fill form → Pay ₹199 on Razorpay → Demo seat confirmed
       </div>
     </div>
   </div>
@@ -1162,52 +1143,42 @@
     const mode   = document.getElementById('e-mode').value;
 
     if(!name){ alert('Please enter your name.'); return; }
-    if(!phone){ alert('Please enter your WhatsApp/phone number.'); return; }
+    if(!phone || phone.length < 10){ alert('Please enter a valid phone number.'); return; }
     if(!course){ alert('Please select a course.'); return; }
+    if(!status){ alert('Please select your current status.'); return; }
+    if(!mode){ alert('Please select preferred class mode.'); return; }
 
-    // Build WhatsApp message
-    const msg =
-      `🎓 *New Enrollment — CodeCraft Institute*` +
-      `\n\n👤 *Name:* ${name}` +
-      `\n📞 *Phone:* ${phone}` +
-      `\n📚 *Course:* ${course}` +
-      `\n🎯 *Status:* ${status || 'Not specified'}` +
-      `\n💻 *Mode:* ${mode || 'Not specified'}` +
-      `\n\n*Please contact me for demo class. Thank you!* 🙏`;
-
-    const encodedMsg = encodeURIComponent(msg);
-    const waURL = `https://wa.me/${WA_NUMBER}?text=${encodedMsg}`;
-
-    // Show success message with fallback link
-    const s = document.getElementById('form-success');
-    s.innerHTML = `
-      <div style="font-size:1.1rem;margin-bottom:6px;">✅ Enrollment request ready!</div>
-      <div style="font-size:.85rem;opacity:.9;margin-bottom:10px;">WhatsApp pe message bhejne ke liye niche button dabayein.</div>
-      <a href="${waURL}" target="_blank" class="submit-btn" style="display:inline-block;text-decoration:none;margin-bottom:8px;">
-        <span class="wa-icon">💬</span> OPEN WHATSAPP & SEND MESSAGE
-      </a>
-      <div style="font-size:.78rem;opacity:.75;">Agar WhatsApp na khule toh seedha number pe message karein: <strong>9877618752</strong></div>
+    const DEMO_FEE = 199;
+    const sEl = document.getElementById('form-success');
+    sEl.innerHTML = `
+      <div style="font-size:1.15rem;margin-bottom:6px;">✅ Form submitted, ${name}!</div>
+      <div style="font-size:.9rem;opacity:.9;margin-bottom:14px;">
+        Course: <b>${course}</b> · Mode: <b>${mode}</b><br>
+        Demo fee: <b style="color:var(--green);font-size:1.05rem;">₹${DEMO_FEE}</b> · Razorpay checkout opening…
+      </div>
+      <button type="button" onclick="openRazorpay(${DEMO_FEE}, 'Demo Class Fee')" class="submit-btn"
+         style="background:linear-gradient(135deg,#1565c0,#1e88e5);color:#fff;">
+        💳 PAY ₹${DEMO_FEE} NOW VIA RAZORPAY
+      </button>
+      <div style="font-size:.78rem;opacity:.85;margin-top:10px;">Amount <b style="color:var(--green);">₹${DEMO_FEE}</b> is already fixed in Razorpay checkout — sirf Pay button dabana hai.</div>
     `;
-    s.style.display = 'block';
+    sEl.style.display = 'block';
+    sEl.scrollIntoView({behavior:'smooth', block:'center'});
+    finalizeEnroll();
+    setTimeout(()=>{
+      openRazorpay(DEMO_FEE, 'Demo Class Fee');
+    }, 600);
+  }
 
-    // Clear fields
+  // Called after user clicks the Pay button — clears form & confirms submission
+  function finalizeEnroll(){
     ['e-name','e-phone','e-course','e-status','e-mode'].forEach(id => {
-      const el = document.getElementById(id);
-      if(el) el.value = '';
+      const el = document.getElementById(id); if(el) el.value = '';
     });
-
-    // Open WhatsApp automatically (try both methods for compatibility)
-    try {
-      const a = document.createElement('a');
-      a.href = waURL;
-      a.target = '_blank';
-      a.rel = 'noopener noreferrer';
-      document.body.appendChild(a);
-      a.click();
-      setTimeout(() => a.remove(), 100);
-    } catch(e) {
-      window.open(waURL, '_blank');
-    }
+    setTimeout(() => {
+      const sEl = document.getElementById('form-success');
+      if(sEl) sEl.innerHTML = `<div style="font-size:1.05rem;">✅ Enrollment submitted! Complete the payment in the opened tab to confirm your seat. We'll contact you on WhatsApp shortly.</div>`;
+    }, 800);
   }
 
   // ── CONTACT FORM → WHATSAPP ──
@@ -1431,21 +1402,18 @@ document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeCourse(); })
 </script>
 
 
-<!-- PAYMENT MODAL (UPI / PhonePe) -->
+<!-- PAYMENT MODAL (RAZORPAY ONLY) -->
 <div class="pay-overlay" id="payModal" onclick="if(event.target===this)closePay()">
   <div class="pay-box">
     <button class="pay-close" onclick="closePay()">✕</button>
     <div class="pay-head">
-      <h3>💳 Complete Payment</h3>
+      <h3>💳 Complete Payment via Razorpay</h3>
       <div class="sub" id="payLabel">Course Payment</div>
     </div>
     <div class="pay-amount" id="payAmount">₹0</div>
-    <div class="pay-qr-wrap" onclick="confirmPaid()" style="cursor:pointer" title="Click after payment">
-      <img id="payQR" alt="Scan to Pay UPI QR"/>
-    </div>
-    <div class="pay-upi" id="payUpi" onclick="copyUpi()" title="Click to copy UPI ID">
-      <small>UPI ID — TAP TO COPY</small>
-      aanchal201v@okhdfcbank
+    <div style="margin-top:14px;text-align:center;">
+      <button onclick="openRazorpay(_payCtx.amount, _payCtx.label)" style="width:100%;background:linear-gradient(135deg,#1565c0,#1e88e5);color:#fff;border:none;padding:14px 18px;border-radius:10px;font-weight:800;font-size:.95rem;letter-spacing:.06em;cursor:pointer;box-shadow:0 8px 24px rgba(21,101,192,.35);font-family:inherit;">💳 Pay with Razorpay (Cards / UPI / Netbanking)</button>
+      <div style="font-size:.72rem;color:var(--muted);margin-top:8px;">Secure payment via razorpay.me/@aanchal4367</div>
     </div>
     <div class="pay-success" id="paySuccess" style="display:none;text-align:center;padding:18px 12px;margin-top:6px;background:rgba(0,200,120,.12);border:1px solid var(--green);border-radius:12px;color:var(--green);font-weight:700;font-size:1.05rem;">
       ✅ Course Enrolled Successfully
@@ -1454,53 +1422,74 @@ document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeCourse(); })
 </div>
 
 <script>
-const UPI_ID = "aanchal201v@okhdfcbank";
-const PAYEE  = "CodeCraft Institute";
+const RAZORPAY_LINK = "https://razorpay.me/@aanchal4367";
+const RAZORPAY_PAGE_ID = "pl_SsllQoFysfqRJU";
+const RAZORPAY_ITEM_ID = "ppi_SsllQqkdOpRAsp";
+const RAZORPAY_KEYLESS_HEADER = "api_v1:MqWGj2n/zVygmlzpqcGo5g3IaW4EVGQwJ3D4yVT4Hv87mqj5dmifqs2xgMx0EKLkFjsuVsIDE5ioS0qSTrOGSVnZdNF/1w==";
 const WA_NUM = "919877618752";
 let _payCtx = { amount:0, label:'' };
 
-function _buildUpiLink(amount, note){
-  const params = new URLSearchParams({
-    pa: UPI_ID, pn: PAYEE,
-    am: String(amount), cu: 'INR',
-    tn: note
+function loadRazorpaySdk(){
+  return new Promise((resolve, reject)=>{
+    if(window.Razorpay){ resolve(); return; }
+    const existing = document.querySelector('script[src="https://checkout.razorpay.com/v1/checkout.js"]');
+    if(existing){ existing.addEventListener('load', resolve, { once:true }); existing.addEventListener('error', reject, { once:true }); return; }
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.onload = resolve;
+    script.onerror = reject;
+    document.head.appendChild(script);
   });
-  return 'upi://pay?' + params.toString();
 }
-function _phonePeLink(amount, note){
-  const params = new URLSearchParams({
-    pa: UPI_ID, pn: PAYEE, am: String(amount), cu: 'INR', tn: note
+
+function createRazorpayCheckout(rupees, label){
+  return new Razorpay({
+    payment_link_id: RAZORPAY_PAGE_ID,
+    keyless_header: RAZORPAY_KEYLESS_HEADER,
+    amount: rupees * 100,
+    currency: 'INR',
+    name: 'CodeCraft Institute',
+    description: label || 'Course Payment',
+    notes: { comment: `${label || 'CodeCraft payment'} - ₹${rupees}` },
+    theme: { color: '#1565c0' },
+    modal: { confirm_close: true, escape: true },
+    handler: function(){
+      const ps = document.getElementById('paySuccess');
+      if(ps){ ps.textContent = '✅ Payment successful — amount ₹' + rupees + ' received on Razorpay'; ps.style.display = 'block'; }
+      setTimeout(closePay, 1800);
+    }
   });
-  return 'phonepe://pay?' + params.toString();
+}
+
+async function openRazorpay(amount, label){
+  const rupees = Math.max(1, Math.floor(Number(amount) || 0));
+  const payBtn = document.querySelector('#payModal .pay-box button[onclick^="openRazorpay"]');
+  if(payBtn){ payBtn.disabled = true; payBtn.textContent = 'Opening Razorpay ₹' + rupees + '…'; }
+  try{
+    await loadRazorpaySdk();
+    createRazorpayCheckout(rupees, label).open();
+  } catch(e){
+    alert('Razorpay checkout open nahi ho paaya. Main safe Razorpay page open kar raha hoon.');
+    const win = window.open(RAZORPAY_LINK, '_blank', 'noopener,noreferrer');
+    if(!win){ try { window.top.location.href = RAZORPAY_LINK; } catch(err) { window.location.href = RAZORPAY_LINK; } }
+  } finally {
+    if(payBtn){ payBtn.disabled = false; payBtn.textContent = '💳 Pay with Razorpay — ₹' + rupees; }
+  }
 }
 
 function openPay(amount, label){
   _payCtx = { amount, label };
   document.getElementById('payAmount').textContent = '₹' + amount;
   document.getElementById('payLabel').textContent = label;
-  const note = (label + ' - CodeCraft').replace(/[^\w\s-]/g,'').slice(0,40);
-  const link = _buildUpiLink(amount, note);
-  document.getElementById('payQR').src =
-    'https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=0&data=' + encodeURIComponent(link);
-  document.getElementById('paySuccess').style.display = 'none';
+  const ps = document.getElementById('paySuccess'); if(ps) ps.style.display = 'none';
   document.getElementById('payModal').classList.add('active');
   document.body.style.overflow = 'hidden';
+  // Auto-redirect to Razorpay
+  setTimeout(()=>openRazorpay(amount, label), 500);
 }
 function closePay(){
   document.getElementById('payModal').classList.remove('active');
   document.body.style.overflow = '';
-}
-function copyUpi(){
-  navigator.clipboard.writeText(UPI_ID).then(()=>{
-    const el = document.getElementById('payUpi');
-    const orig = el.innerHTML;
-    el.innerHTML = '<small>COPIED ✓</small>' + UPI_ID;
-    setTimeout(()=>{ el.innerHTML = orig; }, 1500);
-  });
-}
-function confirmPaid(){
-  document.getElementById('paySuccess').style.display = 'block';
-  setTimeout(closePay, 2500);
 }
 function payFromModal(){
   const title = (window._currentCourse || 'Course');
